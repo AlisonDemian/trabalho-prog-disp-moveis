@@ -5,7 +5,7 @@ spring:
     hibernate:
       ddl-auto: create-drop
   datasource:
-    url: jdbc:postgresql://postgres:3ZUKzMb4LDk9vjU8r0oU$containers-us-west-107.railway.app:6117/railway
-    username: postgres
-    password: 3ZUKzMb4LDk9vjU8r0oU
+    url: jdbc:postgresql://${{ PGUSER }}:${{ PGPASSWORD }}@${{ PGHOST }}:${{ PGPORT }}/${{ PGDATABASE }}
+    username: ${PGUSER}
+    password: ${PGPASSWORD}
     driverClassName: org.postgresql.Driver
