@@ -32,4 +32,5 @@ jar {
                 'Main-Class': 'com.trabalho.ProgDispMoveisApplication'
         )
     }
+	enabled = false
 }
