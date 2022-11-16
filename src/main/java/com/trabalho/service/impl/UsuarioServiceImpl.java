@@ -21,11 +21,16 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Autowired
     private UsuarioMapper mapper;
 
-    private PasswordEncoder encoder = new BCryptPasswordEncoder();;
+    private PasswordEncoder encoder = new BCryptPasswordEncoder();
+    ;
 
     @Override
     public UsuarioModel adicionarUsuario(UsuarioRequestDto requestDto) {
         UsuarioModel model = mapper.requestToModel(requestDto);
+        String usuario = requestDto.getUsuario();
+
+        boolean usuarioNaoExistente = repository.findByNome(usuario).isEmpty();
+        if (!usuarioNaoExistente) throw new BusinessException(String.format("Usuário %s já existe", usuario));
         model.setSenha(encoder.encode(model.getSenha()));
         return repository.save(model);
     }
@@ -38,12 +43,13 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public boolean logarUsuario(UsuarioRequestDto requestDto) {
-        String nome =  requestDto.getUsuario();
+        String nome = requestDto.getUsuario();
         UsuarioModel model = repository.findByNome(nome)
                 .orElseThrow(() -> new AuthenticationException(String.format("Esse usuário não existe! Registre-se antes de logar.", nome)));
         boolean senhaVerificada = encoder.matches(requestDto.getSenha(), model.getSenha());
 
-        if(nome.equals(model.getNome()) && !senhaVerificada) throw new AuthenticationException("Usuário ou senha incorreta");
+        if (nome.equals(model.getNome()) && !senhaVerificada)
+            throw new AuthenticationException("Usuário ou senha incorreta");
 
         return true;
     }
