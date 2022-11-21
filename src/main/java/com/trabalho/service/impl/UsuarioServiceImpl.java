@@ -42,7 +42,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public boolean logarUsuario(UsuarioRequestDto requestDto) {
+    public Integer logarUsuario(UsuarioRequestDto requestDto) {
         String nome = requestDto.getUsuario();
         UsuarioModel model = repository.findByNome(nome)
                 .orElseThrow(() -> new AuthenticationException(String.format("Esse usuário não existe! Registre-se antes de logar.", nome)));
@@ -51,6 +51,6 @@ public class UsuarioServiceImpl implements UsuarioService {
         if (nome.equals(model.getNome()) && !senhaVerificada)
             throw new AuthenticationException("Usuário ou senha incorreta");
 
-        return true;
+        return model.getId();
     }
 }

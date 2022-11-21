@@ -28,7 +28,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Boolean> loginUsuario(@RequestBody UsuarioRequestDto model) {
+    public ResponseEntity<Integer> loginUsuario(@RequestBody UsuarioRequestDto model) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(service.logarUsuario(model));

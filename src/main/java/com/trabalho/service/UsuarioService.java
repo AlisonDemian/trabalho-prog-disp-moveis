@@ -8,5 +8,5 @@ public interface UsuarioService {
     UsuarioModel adicionarUsuario(UsuarioRequestDto requestDto);
 
     UsuarioModel buscarUsuarioPorId(Integer id);
-    boolean logarUsuario(UsuarioRequestDto requestDto);
+    Integer logarUsuario(UsuarioRequestDto requestDto);
 }
