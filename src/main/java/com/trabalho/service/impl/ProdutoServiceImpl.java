@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProdutoServiceImpl implements ProdutoService {
@@ -24,10 +25,11 @@ public class ProdutoServiceImpl implements ProdutoService {
     @Override
     public ProdutoModel addProduto(ProdutoRequestDto requestDto) {
         ProdutoModel novoProd = mapper.requestToModel(requestDto);
-        repository.findByNome(novoProd.getNome()).ifPresentOrElse( m -> {
-            novoProd.setId(m.getId());
-            novoProd.setQuantidade(novoProd.getQuantidade() + m.getQuantidade());
-        }, null);
+        Optional<ProdutoModel> optProd = repository.findByNome(novoProd.getNome());
+        if (optProd.isPresent()) {
+            novoProd.setId(optProd.get().getId());
+            novoProd.setQuantidade(novoProd.getQuantidade() + optProd.get().getQuantidade());
+        }
         return repository.save(novoProd);
     }
 
@@ -54,7 +56,7 @@ public class ProdutoServiceImpl implements ProdutoService {
         ProdutoModel model = buscarProdutoPorId(id);
         Integer qntAtual = model.getQuantidade();
 
-        if(qntAtual < qnt) throw new BusinessException("Quantidade em estoque insuficiente para compra");
+        if (qntAtual < qnt) throw new BusinessException("Quantidade em estoque insuficiente para compra");
 
         model.setQuantidade(Math.subtractExact(qntAtual, qnt));
         repository.save(model);
