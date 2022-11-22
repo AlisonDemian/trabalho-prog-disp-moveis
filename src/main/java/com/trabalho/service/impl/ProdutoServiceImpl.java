@@ -23,7 +23,12 @@ public class ProdutoServiceImpl implements ProdutoService {
 
     @Override
     public ProdutoModel addProduto(ProdutoRequestDto requestDto) {
-        return repository.save(mapper.requestToModel(requestDto));
+        ProdutoModel novoProd = mapper.requestToModel(requestDto);
+        repository.findByNome(novoProd.getNome()).ifPresentOrElse( m -> {
+            novoProd.setId(m.getId());
+            novoProd.setQuantidade(novoProd.getQuantidade() + m.getQuantidade());
+        }, null);
+        return repository.save(novoProd);
     }
 
     @Override
